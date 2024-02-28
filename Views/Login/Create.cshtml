@@ -1,0 +1,34 @@
+﻿@model BookShelfHaven5.Models.Customer
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Log in</h1> <!-- changesd the name from original to log in-->
+
+<h4>Log in by entering your credentials</h4> <!--changed the text to log in by entering credentials -->
+
+
+<form asp-action="Login" method="post">
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+
+
+<div>
+    <a asp-action="Create" asp-controller="Register"> Dont have an Account? Go back to register page</a> <!--changed the link to direct to the register page or view-->
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
