@@ -1,0 +1,122 @@
+Create Database BookShelfHaven;
+
+Create Table Customers(
+Username Nvarchar (50) PRIMARY KEY Not Null,
+FirstName Nvarchar (50) Not Null,
+LastName Nvarchar (50) Not Null,
+Email Nvarchar (100) Not Null,
+PasswordHash Nvarchar (255) Not Null,
+FailedLoginAttempts INT NOT NULL DEFAULT 0,
+);
+
+
+CREATE TABLE LoginAttempts (
+    AttemptId INT PRIMARY KEY IDENTITY(1,1),
+    Username Nvarchar (50),
+    AttemptDateTime DATETIME NOT NULL,
+    Success BIT NOT NULL,
+    FOREIGN KEY (Username) REFERENCES Customers(Username)
+);
+
+Create Table Product(
+ProductId Int Primary Key Not Null,
+ProductNames Nvarchar (100) Not Null,
+Description Nvarchar(MAX),
+Price Decimal(10,2) Not Null,
+ImageURL NVARCHAR(MAX)
+);
+
+
+Create Table Cart(
+
+ CartId INT IDENTITY(1,1) PRIMARY KEY,
+Username Nvarchar (50),
+UserID Nvarchar (200),
+ProductId Int Not Null,
+Quantity Int Not Null,
+Description Nvarchar(MAX),
+ImageURL NVARCHAR(MAX),
+ProductNames Nvarchar (100) Not Null,
+Price Decimal(10,2) Not Null,
+Foreign Key (Username) References Customers(Username),
+Foreign Key(ProductId) References Product(ProductId),
+);
+
+CREATE TABLE Checkout (
+    CheckoutId INT PRIMARY KEY IDENTITY(1,1),
+	Username Nvarchar (50),
+    ProductId INT NOT NULL,
+    Quantity INT NOT NULL,
+	Description Nvarchar(MAX),
+	ImageURL NVARCHAR(MAX),
+	Price Decimal(10,2) Not Null,
+    TotalPrice DECIMAL(10, 2) NOT NULL,
+    CheckoutDateTime DATETIME NOT NULL,
+    PaymentInformation NVARCHAR(MAX),
+    ShippingInformation NVARCHAR(MAX),
+    Status NVARCHAR(50) NOT NULL,
+    AdditionalInformation NVARCHAR(MAX),
+    CONSTRAINT FK_CustomerId FOREIGN KEY (Username) REFERENCES Customers(Username),
+    CONSTRAINT FK_ProductId FOREIGN KEY (ProductId) REFERENCES Product(ProductId)
+);
+
+
+INSERT INTO Product (ProductId, ProductNames, Description, Price) VALUES
+(1, 'The Great Gatsby', 'A novel by F. Scott Fitzgerald', 12.99),
+(2, 'To Kill a Mockingbird', 'A novel by Harper Lee', 9.99),
+(3, '1984', 'A dystopian novel by George Orwell', 10.49),
+(4, 'Pride and Prejudice', 'A romantic novel by Jane Austen', 8.50),
+(5, 'The Catcher in the Rye', 'A novel by J.D. Salinger', 11.25),
+(6, 'Lord of the Flies', 'A novel by William Golding', 9.75),
+(7, 'Animal Farm', 'A satirical novella by George Orwell', 7.99),
+(8, 'Brave New World', 'A dystopian novel by Aldous Huxley', 10.99),
+(9, 'The Hobbit', 'A fantasy novel by J.R.R. Tolkien', 14.99),
+(10, 'To the Lighthouse', 'A novel by Virginia Woolf', 11.99);
+
+UPDATE Product
+SET ImageURL = 'https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781524879761/the-great-gatsby-9781524879761_lg.jpg'
+WHERE ProductId = 1;
+
+UPDATE Product
+SET ImageURL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/To_Kill_a_Mockingbird_%28first_edition_cover%29.jpg/330px-To_Kill_a_Mockingbird_%28first_edition_cover%29.jpg'
+WHERE ProductId = 2;
+
+UPDATE Product
+SET ImageURL = 'https://cdn.kobo.com/book-images/698a1326-f8b7-4664-8f34-75f6633e816e/353/569/90/False/13xLRb-vHz2DfdgvhkjkHg.jpg'
+WHERE ProductId = 3;
+
+UPDATE Product
+SET ImageURL = 'https://cdn2.penguin.com.au/covers/original/9780141949055.jpg'
+WHERE ProductId = 4;
+
+UPDATE Product
+SET ImageURL = 'https://cdn2.penguin.com.au/covers/400/9780241950432.jpg'
+WHERE ProductId = 5;
+
+UPDATE Product
+SET ImageURL = 'https://cdn2.penguin.com.au/covers/400/9781405912082.jpg'
+WHERE ProductId = 6;
+
+UPDATE Product
+SET ImageURL = 'https://cdn2.penguin.com.au/covers/400/9780241391853.jpg'
+WHERE ProductId = 7;
+
+UPDATE Product
+SET ImageURL = 'https://cdn2.penguin.com.au/covers/400/9781784876258.jpg'
+WHERE ProductId = 8;
+
+UPDATE Product
+SET ImageURL = 'https://m.media-amazon.com/images/I/51oZneFTrlL.SY445_SX342.jpg'
+WHERE ProductId = 9;
+
+UPDATE Product
+SET ImageURL = 'https://m.media-amazon.com/images/I/51ZgbCg2YLL.SY445_SX342.jpg'
+WHERE ProductId = 10;
+
+
+SELECT * FROM Customers
+SELECT * FROM Product
+SELECT * FROM Cart
+SELECT * FROM Checkout
+
+
