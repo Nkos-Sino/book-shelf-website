@@ -17,7 +17,11 @@ namespace BookShelfHaven5.Controllers
         {
             return View();
         }
-
+        public ActionResult SuccessMessage()
+        {
+            ViewBag.Message = "Successfully added";
+            return View("SuccessMessage");
+        }
         public IActionResult Privacy()
         {
             return View();

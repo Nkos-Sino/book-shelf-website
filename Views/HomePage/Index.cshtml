@@ -4,59 +4,73 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<style>
+    .book-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<div class="row">
-  
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductNames)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductNames)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-                            <form asp-controller="HomePage" asp-action="AddToCart" method="post">
-                                <input type="hidden" name="ProductId" value="@item.ProductId" />
-                                <input type="hidden" name="ProductNames" value="@item.ProductNames" />
-                                <input type="hidden" name="Description" value="@item.Description" />
-                                <input type="hidden" name="Price" value="@item.Price" />
-                                <button type="submit" class="btn btn-primary">Add to Cart</button>
-                            </form>
-            </td>
-        </tr>
+    .book {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid #ddd;
+        padding: 10px;
+    }
+
+    .product--image {
+        width: 100%;
+    }
+
+    .product--content {
+        padding-top: 10px;
+    }
+</style>
+
+<h1>Books</h1>
+
+<h3> <div class="center"> from our wide range of books to see which one fits your needs.</div></h3>
+<a asp-action="Index" asp-controller="Checkout" class="btn btn-success">View Cart</a>
+
+
+<div class="book-grid">
+    @foreach (var item in Model)
+    {
+        <div class="book">
+            <div class="li portrait has-form">
+                <figure>
+                    <a href="@Url.Action("Details", "Products", new { id = item.ProductId })">
+                        <img src="@item.ImageUrl" alt="@item.ImageUrl" class="product--image">
+                    </a>
+                </figure>
+                <div class="product--content">
+                    <div>
+                        <h3 class="product-collection--title"><a href="@Url.Action("Details", "Products", new { id = item.ProductId })">@item.ProductNames</a></h3>
+                    </div>
+                    <div class="author--container">
+                        <span class="author-title">@item.ProductNames</span>
+                        
+                    </div>
+                    <div class="static">
+                        <p class="price">@item.Price</p>
+                        <form asp-controller="HomePage" asp-action="AddToCart" method="post">
+                            <input type="hidden" name="ProductId" value="@item.ProductId" />
+                            <input type="hidden" name="ProductNames" value="@item.ProductNames" />
+                            <input type="hidden" name="Description" value="@item.Description" />
+                            <input type="hidden" name="Price" value="@item.Price" />
+                            <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        </form>
+                            
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
-    </tbody>
-</table>

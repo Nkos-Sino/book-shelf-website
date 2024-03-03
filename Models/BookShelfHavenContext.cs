@@ -37,7 +37,7 @@ public partial class BookShelfHavenContext : DbContext
 
             entity.ToTable("Cart");
 
-            entity.Property(e => e.CartId).HasMaxLength(20);
+            entity.Property(e => e.CartId).HasMaxLength(200);
             entity.Property(e => e.ImageUrl).HasColumnName("ImageURL");
             entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.ProductNames).HasMaxLength(100);

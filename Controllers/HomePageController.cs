@@ -64,27 +64,35 @@ namespace BookShelfHaven5.Controllers
             return View(product);
         }
 
-        public async Task<IActionResult> AddToCart([Bind("CartId,ProductId, ProductNames, Description, Price")] Product product)
+ 
+    
+    public async Task<IActionResult> AddToCart([Bind("CartId, ProductId, ProductNames, Description, Price, ImageUrl, UserId")] Product product)
         {
             if (ModelState.IsValid)
             {
                 // Create a new CartItem using the Product data
                 var cartItem = new Cart
                 {
-                    //CartId = product.ProductId,
+
+                    Username = HttpContext.Session.GetString("Username"),
+                   
+                    ImageUrl = product.ImageUrl,
                     ProductId = product.ProductId,
                     ProductNames = product.ProductNames,
                     Description = product.Description,
                     Price = product.Price
                     // Add other properties of CartItem if necessary
-                };
+
+                
+            };
 
 
                 // Add the CartItem to the database
                 _context.Carts.Add(cartItem);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Index", "Home"); // Redirect to the homepage or another appropriate page
+            return RedirectToAction("Index", "Home"); // Redirect to the homepage or another appropriate page
+
             }
 
             // If the model state is not valid, handle the error (return to previous page, show error message, etc.)

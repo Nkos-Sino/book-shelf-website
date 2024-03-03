@@ -1,34 +1,58 @@
 ﻿@model BookShelfHaven5.Models.Customer
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Log in";
 }
 
-<h1>Log in</h1> <!-- changesd the name from original to log in-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Book Shelf Haven</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light gray background */
+        }
 
-<h4>Log in by entering your credentials</h4> <!--changed the text to log in by entering credentials -->
+        .container {
+            margin-top: 50px;
+        }
 
+        .login-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+        }
 
-<form asp-action="Login" method="post">
-    <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" class="form-control" id="username" name="username" required>
+        .form-group {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="login-title">Book Shelf Haven</h1>
+
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <form asp-action="Login" method="post">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    </div  class="text-center">>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a asp-action="Create" asp-controller="Register" class="btn btn-info"> Dont have an account? Register</a><!--changed the link to direct to the Log in page or view-->
+        </div>
     </div>
-    <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
-
-
-<div>
-    <a asp-action="Create" asp-controller="Register"> Dont have an Account? Go back to register page</a> <!--changed the link to direct to the register page or view-->
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
-
+</body>
+</html>

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<BookShelfHaven5.Models.Cart>
+
+@{
+    ViewData["Title"] = "Index";
+    var username = ViewBag.Username; // Retrieve username from ViewBag
+    var itemsForUser = Model.Where(item => item.Username == username); // Filter items by username
+}
+
+<h1>Index</h1>
+
+<p>
+    <!--<a asp-action="Create">Create New</a>-->
+    <a asp-action="Index" asp-controller="HomePage" class="btn btn-danger">Go back to Home page</a>
+</p>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.ProductNames)</th>
+                    <th>@Html.DisplayNameFor(model => model.Description)</th>
+                    <th>@Html.DisplayNameFor(model => model.Price)</th>
+                    <th>@Html.DisplayNameFor(model => model.ImageUrl)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in itemsForUser)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.ProductNames)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ImageUrl)</td>
+                        <td>
+                            <form asp-controller="HomePage" asp-action="AddToCart" method="post">
+                                <input type="hidden" name="ProductId" value="@item.ProductId" />
+                                <input type="hidden" name="ProductNames" value="@item.ProductNames" />
+                                <input type="hidden" name="Description" value="@item.Description" />
+                                <input type="hidden" name="Price" value="@item.Price" />
+                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                <a asp-action="Delete" asp-route-id="@item.CartId" class="btn btn-danger">Remove From Cart</a>
+                                <a asp-action="Details" asp-route-id="@item.CartId" class="btn btn-primary">View Details</a>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (itemsForUser.Any())
+        {
+            <div>
+                <strong>Total Price:</strong> $@itemsForUser.Sum(item => item.Price)
+                <a asp-action="Index" asp-controller="PaymentPage" class="btn btn-success">Checkout (Pay)</a>
+            </div>
+        }
+        else
+        {
+            <p>No items in the cart for this user.</p>
+        }
+    </div>
+</div>
