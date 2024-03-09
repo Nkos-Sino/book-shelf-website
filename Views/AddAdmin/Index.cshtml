@@ -1,14 +1,17 @@
-﻿@model IEnumerable<BookShelfHaven5.Models.Customer>
+﻿@model IEnumerable<BookShelfHaven5.Models.Admin>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Welcome Admin to the admin page</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-danger">Create New Admin</a>
 </p>
+<a asp-action="Index" asp-controller="ViewOrders" class="btn btn-success">Go to ViewOrders</a>
+<a asp-action="Index" asp-controller="AddInventory" class="btn btn-success">Add Inventory</a>
+<a asp-action="Index" asp-controller="AddQuantity" class="btn btn-success">Add Quantity</a>
 <table class="table">
     <thead>
         <tr>
@@ -57,4 +60,3 @@
 }
     </tbody>
 </table>
-

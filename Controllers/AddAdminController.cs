@@ -9,22 +9,22 @@ using BookShelfHaven5.Models;
 
 namespace BookShelfHaven5.Controllers
 {
-    public class RegisterController : Controller
+    public class AddAdminController : Controller
     {
         private readonly BookShelfHavenContext _context;
 
-        public RegisterController(BookShelfHavenContext context)
+        public AddAdminController(BookShelfHavenContext context)
         {
             _context = context;
         }
 
-        // GET: Register
+        // GET: AddAdmin
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customers.ToListAsync());
+            return View(await _context.Admins.ToListAsync());
         }
 
-        // GET: Register/Details/5
+        // GET: AddAdmin/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -32,54 +32,41 @@ namespace BookShelfHaven5.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
+            var admin = await _context.Admins
                 .FirstOrDefaultAsync(m => m.Username == id);
-            if (customer == null)
+            if (admin == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
+            return View(admin);
         }
 
-        // GET: Register/Create
+        // GET: AddAdmin/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Register/Create
+        // POST: AddAdmin/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Username,FirstName,LastName,Email,PasswordHash")] Customer customer)
+        public async Task<IActionResult> Create([Bind("Username,FirstName,LastName,Email,PasswordHash,FailedLoginAttempts")] Admin admin)
         {
-            var existingCustomer = await _context.Customers.FirstOrDefaultAsync(c => c.Username == customer.Username);
-            if (existingCustomer != null)
-            {
-                ModelState.AddModelError("Username", "Username already exists. Please choose another one.");
-                return View(customer);
-            }
-
-            if (customer.Username.StartsWith("Admin", StringComparison.OrdinalIgnoreCase))
-            {
-                
-                ModelState.AddModelError("Username", "Username not available."); // Add error to ModelState
-                return View(customer); 
-
-               
-            }
             if (ModelState.IsValid)
             {
-                customer.PasswordHash = BCrypt.Net.BCrypt.HashPassword(customer.PasswordHash);
-                _context.Add(customer);
+                admin.PasswordHash = BCrypt.Net.BCrypt.HashPassword(admin.PasswordHash);
+                _context.Add(admin);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "Login");// CHANGING THE LINK TO REDIRECT TO THE CREATE PAGE OF THE MODULE INFORMAITON
+                return RedirectToAction("Create", "AddAdmin");// CHANGING THE LINK TO REDIRECT TO THE CREATE PAGE OF THE MODULE INFORMAITON
             }
-            return View(customer);
+            return View(admin);
+          
         }
-        // GET: Register/Edit/5
+
+        // GET: AddAdmin/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -87,22 +74,22 @@ namespace BookShelfHaven5.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
+            var admin = await _context.Admins.FindAsync(id);
+            if (admin == null)
             {
                 return NotFound();
             }
-            return View(customer);
+            return View(admin);
         }
 
-        // POST: Register/Edit/5
+        // POST: AddAdmin/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Username,FirstName,LastName,Email,PasswordHash,FailedLoginAttempts")] Customer customer)
+        public async Task<IActionResult> Edit(string id, [Bind("Username,FirstName,LastName,Email,PasswordHash,FailedLoginAttempts")] Admin admin)
         {
-            if (id != customer.Username)
+            if (id != admin.Username)
             {
                 return NotFound();
             }
@@ -111,12 +98,12 @@ namespace BookShelfHaven5.Controllers
             {
                 try
                 {
-                    _context.Update(customer);
+                    _context.Update(admin);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CustomerExists(customer.Username))
+                    if (!AdminExists(admin.Username))
                     {
                         return NotFound();
                     }
@@ -127,10 +114,10 @@ namespace BookShelfHaven5.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            return View(admin);
         }
 
-        // GET: Register/Delete/5
+        // GET: AddAdmin/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -138,34 +125,34 @@ namespace BookShelfHaven5.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
+            var admin = await _context.Admins
                 .FirstOrDefaultAsync(m => m.Username == id);
-            if (customer == null)
+            if (admin == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
+            return View(admin);
         }
 
-        // POST: Register/Delete/5
+        // POST: AddAdmin/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer != null)
+            var admin = await _context.Admins.FindAsync(id);
+            if (admin != null)
             {
-                _context.Customers.Remove(customer);
+                _context.Admins.Remove(admin);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CustomerExists(string id)
+        private bool AdminExists(string id)
         {
-            return _context.Customers.Any(e => e.Username == id);
+            return _context.Admins.Any(e => e.Username == id);
         }
     }
 }

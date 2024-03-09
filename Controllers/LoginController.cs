@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookShelfHaven5.Models;
+using Microsoft.AspNetCore.Localization;
 
 namespace BookShelfHaven5.Controllers
 {
@@ -63,12 +64,26 @@ namespace BookShelfHaven5.Controllers
             }
             return View(customer);
         }
+       
         public async Task<IActionResult> Login(string username, string password)
         {
             if (ModelState.IsValid)
             {
                 // Retrieve the user from the database based on the provided username
                 var userInDb = await _context.Customers.SingleOrDefaultAsync(u => u.Username == username);
+                var AdminInDb = await _context.Admin.SingleOrDefaultAsync(u => u.Username == username);
+
+                if (AdminInDb != null && AdminInDb != null && BCrypt.Net.BCrypt.Verify(password, AdminInDb.PasswordHash))
+                {
+                    // Password matches, user is logged in
+                    // For simplicity, you can set a session variable or authentication cookie here
+                    //HttpContext.Session.SetString("UserId", userInDb.Id); // Example of setting session variable
+                    HttpContext.Session.SetString("Username", AdminInDb.Username);
+                    // Redirect the user to the dashboard or home page
+                    return RedirectToAction("Index", "AddAdmin");
+                }
+                else
+
 
                 if (userInDb != null && userInDb != null && BCrypt.Net.BCrypt.Verify(password, userInDb.PasswordHash))
                 {
@@ -79,19 +94,16 @@ namespace BookShelfHaven5.Controllers
                     // Redirect the user to the dashboard or home page
                     return RedirectToAction("Index", "HomePage");
                 }
-                else
-                {
-                    // Invalid credentials, add a model error
-                    ModelState.AddModelError(string.Empty, "Invalid username or password");
-                    return View("Index"); // Return to the login view with an error message
-                }
-            }
-            else
-            {
+
+
                 // Model is invalid, return to the login view with validation errors
-                return View("Index");
             }
-        }
+            ModelState.AddModelError("Username", "Incorrect username, please try again");
+            ModelState.AddModelError("PasswordHash", "Incorrect password please try again");
+            //ModelState.AddModelError(string.Empty, "Invalid username or password");
+            return View("Create");
+            }
+        
         // GET: Login/Edit/5
         public async Task<IActionResult> Edit(string id)
         {

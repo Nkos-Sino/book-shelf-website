@@ -6,6 +6,7 @@ namespace BookShelfHaven5.Models;
 public partial class Product
 {
     public int ProductId { get; set; }
+    public int Quantity { get; set; }
 
     public string ProductNames { get; set; } = null!;
 

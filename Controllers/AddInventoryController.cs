@@ -6,26 +6,33 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookShelfHaven5.Models;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace BookShelfHaven5.Controllers
 {
-    public class HomePageController : Controller
+    public class AddInventoryController : Controller
     {
         private readonly BookShelfHavenContext _context;
 
-        public HomePageController(BookShelfHavenContext context)
+        public AddInventoryController(BookShelfHavenContext context)
         {
             _context = context;
         }
 
-        // GET: HomePage
-        public async Task<IActionResult> Index()
+        // GET: AddInventory
+        public async Task<IActionResult> Index(String InventoryCheck)
         {
-            return View(await _context.Products.ToListAsync());
+
+            var Products = _context.Products.AsQueryable();
+
+            if (!string.IsNullOrEmpty(InventoryCheck))
+            {
+                Products = Products.Where(p => p.ProductNames.Contains(InventoryCheck));
+            }
+            return View(Products.ToList());
+            //return View(await _context.Products.ToListAsync());
         }
 
-        // GET: HomePage/Details/5
+        // GET: AddInventory/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,13 +50,13 @@ namespace BookShelfHaven5.Controllers
             return View(product);
         }
 
-        // GET: HomePage/Create
+        // GET: AddInventory/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: HomePage/Create
+        // POST: AddInventory/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -65,47 +72,8 @@ namespace BookShelfHaven5.Controllers
             return View(product);
         }
 
- 
-    
-    public async Task<IActionResult> AddToCart([Bind("Quantity, CartId, ProductId, ProductNames, Description, Price, ImageUrl, UserId")] Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                // Create a new CartItem using the Product data
-                var cartItem = new Cart
-                {
-               
-
-                Username = HttpContext.Session.GetString("Username"),
-                   
-                    ImageUrl = product.ImageUrl,
-                    ProductId = product.ProductId,
-                    ProductNames = product.ProductNames,
-                    Description = product.Description,
-                    Price = product.Price,
-                    Quantity = product.Quantity--
-                // Add other properties of CartItem if necessary
-
-
-            };
-
-
-                // Add the CartItem to the database
-                _context.Carts.Add(cartItem);
-                await _context.SaveChangesAsync();
-
-            return RedirectToAction("Index", "Home"); // Redirect to the homepage or another appropriate page
-
-            }
-
-            // If the model state is not valid, handle the error (return to previous page, show error message, etc.)
-            return RedirectToAction("Error");
-        }
-    
-
-
-    // GET: HomePage/Edit/5
-    public async Task<IActionResult> Edit(int? id)
+        // GET: AddInventory/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -120,7 +88,7 @@ namespace BookShelfHaven5.Controllers
             return View(product);
         }
 
-        // POST: HomePage/Edit/5
+        // POST: AddInventory/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -155,7 +123,7 @@ namespace BookShelfHaven5.Controllers
             return View(product);
         }
 
-        // GET: HomePage/Delete/5
+        // GET: AddInventory/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -173,7 +141,7 @@ namespace BookShelfHaven5.Controllers
             return View(product);
         }
 
-        // POST: HomePage/Delete/5
+        // POST: AddInventory/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
